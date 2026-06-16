@@ -17,15 +17,28 @@ def read_docx(file_path):
 
 def flatten_candidate_profile(row):
     """Dynamically converts a nested JSON row into a single semantic string."""
+    import json # Ensure json is imported at the top of your file
+    
     profile_parts = []
     for col in row.index:
         val = row[col]
-        if pd.isna(val) or not val:
+        
+        # 1. Skip if it is explicitly None
+        if val is None:
             continue
+            
+        # 2. Handle Lists and Dictionaries safely (Bypass pd.isna)
         if isinstance(val, (list, dict)):
+            if len(val) == 0:  # Skip empty lists/dicts
+                continue
             profile_parts.append(f"{col.upper()}: {json.dumps(val)}")
+            
+        # 3. Handle standard text, numbers, and actual NaNs
         else:
+            if pd.isna(val) or str(val).strip() == "":
+                continue
             profile_parts.append(f"{col.upper()}: {str(val)}")
+            
     raw_text = " | ".join(profile_parts)
     return " ".join(raw_text.split())
 
