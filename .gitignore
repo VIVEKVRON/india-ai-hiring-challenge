@@ -1,0 +1,23 @@
+# 1. Ignore massive and real datasets
+data/*.jsonl
+data/*.docx
+data/*.csv
+
+# 2. EXCEPTION: Always upload the dummy data and gitkeep
+!data/dummy_sample.jsonl
+!data/.gitkeep
+
+# 3. Ignore Python compiled cache
+__pycache__/
+*.pyc
+
+# 4. Ignore downloaded AI model weights (HuggingFace cache)
+.cache/
+huggingface/
+
+# 5. Ignore your local Qdrant Vector Database
+qdrant_db/
+
+# 6. Ignore environment variables and Kaggle/Colab config files
+.env
+.ipynb_checkpoints/
