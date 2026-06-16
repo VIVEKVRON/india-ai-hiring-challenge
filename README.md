@@ -24,7 +24,7 @@ india-ai-hiring-challenge/
 │
 ├── data/
 │   ├── .gitkeep                 # Ensures data directory exists
-│   └── dummy_sample.jsonl       # Sample subset for local testing
+│   └── candidates.jsonl       # Sample subset for local testing
 │
 ├── src/
 │   ├── __init__.py
