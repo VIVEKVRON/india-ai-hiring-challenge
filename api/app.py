@@ -55,7 +55,6 @@ def run_pipeline():
         df = pd.read_csv(output_file)
         
         # Ensure we can import from src
-        import sys
         if BASE_DIR not in sys.path:
             sys.path.append(BASE_DIR)
         from src.data_ingestion import read_docx
