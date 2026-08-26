@@ -53,13 +53,36 @@ def run_pipeline():
             return jsonify({'error': 'Output file not generated'}), 500
 
         df = pd.read_csv(output_file)
-        # Convert DataFrame to JSON
-        # Assuming CSV has Rank, Candidate ID, Fit Score, etc.
-        # We can just use records format
-        results = df.to_dict(orient='records')
         
-        # We can also add mock raw text if it's not present in the CSV, but let's assume the frontend will handle it
-        # or we could read it from the JSONL if needed.
+        # Ensure we can import from src
+        import sys
+        if BASE_DIR not in sys.path:
+            sys.path.append(BASE_DIR)
+        from src.data_ingestion import read_docx
+        
+        # Read Job Description
+        jd_path = os.path.join(DATA_DIR, "job_description.docx")
+        jd_text = read_docx(jd_path) if os.path.exists(jd_path) else "Job description not found."
+        
+        # Read Candidates to attach profiles
+        candidates_path = os.path.join(DATA_DIR, "candidates.jsonl")
+        candidates_dict = {}
+        if os.path.exists(candidates_path):
+            candidates_df = pd.read_json(candidates_path, lines=True)
+            id_col = 'candidate_id' if 'candidate_id' in candidates_df.columns else candidates_df.columns[0]
+            candidates_df = candidates_df.fillna('')
+            for _, row in candidates_df.iterrows():
+                cid = str(row[id_col])
+                candidates_dict[cid] = row.to_dict()
+
+        # Combine into results
+        results = []
+        for _, row in df.iterrows():
+            res_dict = row.to_dict()
+            cid = str(res_dict.get('candidate_id', res_dict.get('Candidate ID', res_dict.get('id', ''))))
+            res_dict['jd_text'] = jd_text
+            res_dict['raw_profile'] = candidates_dict.get(cid, {})
+            results.append(res_dict)
 
         return jsonify({
             'status': 'success',

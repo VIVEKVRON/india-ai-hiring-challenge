@@ -83,20 +83,21 @@ export function ExplainabilityPanel({ isOpen, onClose, candidate }: Explainabili
                     <div className="space-y-6">
                       <div className="space-y-2">
                         <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Job Description Context</p>
-                        <div className="p-4 text-sm text-zinc-600 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-900/30 rounded-lg border border-zinc-100 dark:border-zinc-800 leading-relaxed">
-                          <span className="italic opacity-50">
-                            (The raw text mapping will appear here once connected to the full JSONL source. Currently displaying mock context for demonstration.)
-                          </span>
-                          <br /><br />
-                          Looking for a senior developer with experience in React, Python, and cloud architecture...
+                        <div className="p-4 text-sm text-zinc-600 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-900/30 rounded-lg border border-zinc-100 dark:border-zinc-800 leading-relaxed max-h-64 overflow-y-auto whitespace-pre-wrap">
+                          {candidate.jd_text || 'No job description context provided.'}
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Candidate Profile Extract</p>
-                        <div className="p-4 text-sm text-zinc-600 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-900/30 rounded-lg border border-zinc-100 dark:border-zinc-800 leading-relaxed">
-                          <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 px-1 rounded">5+ years React and Python</span>. 
-                          Built scalable microservices on <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 px-1 rounded">AWS</span>...
+                        <div className="p-4 text-sm text-zinc-600 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-900/30 rounded-lg border border-zinc-100 dark:border-zinc-800 leading-relaxed max-h-64 overflow-y-auto">
+                          {candidate.raw_profile ? (
+                            <pre className="font-mono text-xs whitespace-pre-wrap">
+                              {JSON.stringify(candidate.raw_profile, null, 2)}
+                            </pre>
+                          ) : (
+                            'No profile data available.'
+                          )}
                         </div>
                       </div>
                     </div>
