@@ -38,7 +38,7 @@ export function ResultsTable({ results, onViewDetails }: ResultsTableProps) {
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
             {results.map((candidate, index) => {
               const rank = candidate.Rank ?? candidate.rank ?? index + 1;
-              const id = candidate['Candidate ID'] ?? candidate.CandidateID ?? candidate.id ?? `CAND-${index}`;
+              const id = candidate.candidate_id ?? candidate['Candidate ID'] ?? candidate.CandidateID ?? candidate.id ?? `CAND-${index}`;
               const score = candidate['Fit Score'] ?? candidate.Score ?? candidate.score ?? 'N/A';
               
               // Formatting score if it's a number

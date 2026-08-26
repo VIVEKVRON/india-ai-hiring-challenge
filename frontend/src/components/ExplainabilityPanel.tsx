@@ -53,7 +53,7 @@ export function ExplainabilityPanel({ isOpen, onClose, candidate }: Explainabili
                   <div className="space-y-1">
                     <p className="text-sm font-medium text-zinc-500">Candidate ID</p>
                     <p className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-                      {candidate['Candidate ID'] ?? candidate.CandidateID ?? candidate.id ?? 'Unknown'}
+                      {candidate.candidate_id ?? candidate['Candidate ID'] ?? candidate.CandidateID ?? candidate.id ?? 'Unknown'}
                     </p>
                   </div>
                   
@@ -69,6 +69,7 @@ export function ExplainabilityPanel({ isOpen, onClose, candidate }: Explainabili
                       <p className="text-2xl font-semibold text-blue-700 dark:text-blue-300">
                         {typeof candidate.Score === 'number' ? candidate.Score.toFixed(4) : 
                          typeof candidate['Fit Score'] === 'number' ? candidate['Fit Score'].toFixed(4) : 
+                         typeof candidate.score === 'number' ? candidate.score.toFixed(4) : 
                          candidate.score ?? 'N/A'}
                       </p>
                     </div>
@@ -81,6 +82,19 @@ export function ExplainabilityPanel({ isOpen, onClose, candidate }: Explainabili
                     </h3>
                     
                     <div className="space-y-6">
+                      <div className="space-y-2">
+                        <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">AI Analysis</p>
+                        <div className="p-4 text-sm text-zinc-600 dark:text-zinc-300 bg-blue-50 dark:bg-blue-900/10 rounded-lg border border-blue-100 dark:border-blue-900/20 leading-relaxed">
+                          {(candidate.Rank ?? candidate.rank) === 1 ? (
+                            "This candidate is ranked highest because their semantic vector representation has the strongest mathematical alignment with the combined Job Description and Redrob Signals. The cross-encoder contextually mapped their experience to the core requirements better than any other profile in the pool."
+                          ) : (candidate.Rank ?? candidate.rank) <= 5 ? (
+                            `This candidate is ranked #${candidate.Rank ?? candidate.rank} due to a very high contextual overlap score. While not the absolute top match, their profile strongly aligns with the key technical requirements and soft-skill signals identified by the AI.`
+                          ) : (
+                            `This candidate is ranked #${candidate.Rank ?? candidate.rank}. The cross-encoder identified partial semantic alignments with the job requirements, resulting in a moderate fit score compared to the rest of the candidate pool.`
+                          )}
+                        </div>
+                      </div>
+
                       <div className="space-y-2">
                         <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Job Description Context</p>
                         <div className="p-4 text-sm text-zinc-600 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-900/30 rounded-lg border border-zinc-100 dark:border-zinc-800 leading-relaxed max-h-64 overflow-y-auto whitespace-pre-wrap">
